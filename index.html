@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Vue CRUD</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+    <div class="container">
+        <div class="row">
+            <h4 class="float-left">All Users</h4>
+            <button class="float-right">Add new user</button>
+        </div>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+            <tr v-for="user in users">
+                <td>{{user.id}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.email}}</td>
+                <td>
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script src="js/axios.min.js"></script>
+<script src="js/vue.js"></script>
+
+<script>
+    let app = new Vue({
+        el:"#app",
+        data:{
+            users:[],
+            errorMessage: null
+        },
+        methods:{
+            getData:function (){
+                axios.get("http://localhost/dev/vue-php-api/api.php?action=read")
+                .then(function (response){
+                    if (!response.data.error){
+                        app.users = response.data.users;
+                    }else{
+                        app.errorMessage = response.data.message;
+                    }
+                });
+            }
+        },
+        mounted:function (){
+            this.getData();
+        }
+    });
+</script>
+</body>
+</html>
